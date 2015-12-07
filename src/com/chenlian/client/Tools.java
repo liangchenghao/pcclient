@@ -24,7 +24,8 @@ public class Tools {
     }
     
     //是否为手机号
-    public static boolean isMobileNO(String mobiles){  
+    public static boolean isMobileNO(String mobiles){
+    	System.out.println(mobiles);
     	Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");  
     	Matcher m = p.matcher(mobiles);
     	System.out.println("isNumber:" + m.matches());  
@@ -32,7 +33,8 @@ public class Tools {
     }
     
   //是否为网站
-    public static boolean isUrl(String url){  
+    public static boolean isUrl(String url){
+    	System.out.println(url);
     	Pattern p = Pattern.compile(
     			"^([hH][tT]{2}[pP]://|[hH][tT]{2}[pP][sS]://)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/])+$");  
     	Matcher m = p.matcher(url);

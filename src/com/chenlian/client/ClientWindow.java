@@ -17,15 +17,22 @@ public class ClientWindow extends JFrame implements ActionListener {
 	private JPanel contentPane;
 	private JTextField phoneNumber;
 	private JTextField location;
-	private JButton reboot, shutdown, call, sendMessage, network;
-	private String[] btnName = { "重启手机", "关闭电源", "拨打号码", "发送短信", "浏览网页" };
-	private TestPcClient client;
+	private JButton reboot, shutdown, call, sendMessage, network,connect,unConn;
+	private String[] btnName = { "重启手机", "关闭电源", "拨打号码", "发送短信", "浏览网页","连接", "关闭连接"};
+	private static TestPcClient client;
 	private boolean isConnected = false;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		client = new TestPcClient();
+//		try {
+//			TestPcClient.connect();
+//		} catch (InterruptedException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -79,17 +86,24 @@ public class ClientWindow extends JFrame implements ActionListener {
 		network.setBounds(0, 115, 187, 23);
 		contentPane.add(network);
 
+		connect = new JButton("连接");
+		connect.setBounds(0, 0, 187, 23);
+		contentPane.add(connect);
+
+		unConn = new JButton("关闭连接");
+		unConn.setBounds(0, 239, 187, 23);
+		contentPane.add(unConn);
+
 		reboot.addActionListener(this);
 		shutdown.addActionListener(this);
 		call.addActionListener(this);
 		sendMessage.addActionListener(this);
 		network.addActionListener(this);
+		connect.addActionListener(this);
+		unConn.addActionListener(this);
 
-		client = new TestPcClient();
-		isConnected = client.start();
-		
-		this.addWindowListener(new WindowAdapter(){
-			public void windowClosing(WindowEvent we){
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent we) {
 				client.close();
 			}
 		});
@@ -116,16 +130,31 @@ public class ClientWindow extends JFrame implements ActionListener {
 		}
 
 		if (source.equals(btnName[3])) {
-
+			String number = phoneNumber.getText();
+			if (Tools.isMobileNO(number)) {
+				client.sendSMS(number);
+			} else {
+				client.sendSMS("10086");
+			}
 		}
 
 		if (source.equals(btnName[4])) {
-			String location = network.getText();
-			if (Tools.isUrl(location)) {
-				client.netWork(location);
+			String webUrl = location.getText();
+			if (Tools.isUrl(webUrl)) {
+				client.netWork(webUrl);
 			} else {
 				client.netWork("http://www.baidu.com");
 			}
+		}
+
+		if (source.equals(btnName[5])) {
+			client.close();
+			client.create();
+			client.start();
+		}
+
+		if (source.equals(btnName[6])) {
+			client.close();
 		}
 	}
 }
